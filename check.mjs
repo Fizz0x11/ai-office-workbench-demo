@@ -1,7 +1,6 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
-import {webcrypto} from 'node:crypto';
 
 const nodes = new Map();
 const listeners = new Map();
@@ -11,7 +10,7 @@ function node(id) {
 }
 const document = {getElementById:node,querySelector:()=>node('inbox-count'),querySelectorAll:()=>[],addEventListener(type,handler){listeners.set(type,handler);}};
 const ctx = vm.createContext({document,window:{scrollTo(){}},setTimeout:(fn,ms)=>setTimeout(fn,Math.min(ms,2)),setInterval(){},clearTimeout,structuredClone,Intl,Date,console});
-vm.runInContext(readFileSync(new URL('./dist/app.js',import.meta.url),'utf8'),ctx);
+vm.runInContext(readFileSync(new URL('./web/app.js',import.meta.url),'utf8'),ctx);
 assert.match(node('content').innerHTML,/所有数据均为虚构样例/);
 assert.match(node('content').innerHTML,/现在乱在哪/);
 assert.match(node('content').innerHTML,/错了会怎样/);
@@ -52,24 +51,3 @@ vm.runInContext('switchView("knowledge")',ctx);
 assert.match(node('content').innerHTML,/交付复盘/);
 console.log('Demo check passed: data changes, dedup, exception, review, delivery, knowledge.');
 
-if (process.env.DEMO_PASSWORD) {
-  const authNodes = new Map();
-  const authNode = id => {
-    if (!authNodes.has(id)) authNodes.set(id, {hidden:false,textContent:'',value:'',focus(){},reset(){this.elements.username.value='';this.elements.password.value='';},addEventListener(type,handler){this[type]=handler}});
-    return authNodes.get(id);
-  };
-  const form = authNode('login-form');
-  form.elements = {username:{value:'demo',focus(){}},password:{value:process.env.DEMO_PASSWORD,focus(){}}};
-  const authContext = vm.createContext({document:{getElementById:authNode},crypto:webcrypto,TextEncoder,Uint8Array,Array});
-  vm.runInContext(readFileSync(new URL('./dist/auth.js',import.meta.url),'utf8'),authContext);
-  await form.submit({preventDefault(){}});
-  assert.equal(authNode('workbench').hidden,false);
-  assert.equal(authNode('login-screen').hidden,true);
-  authNode('logout-button').click();
-  assert.equal(authNode('workbench').hidden,true);
-  form.elements.username.value='demo';
-  form.elements.password.value='wrong-password';
-  await form.submit({preventDefault(){}});
-  assert.match(authNode('login-error').textContent,/不正确/);
-  console.log('Demo login check passed: valid password, logout, invalid password.');
-}

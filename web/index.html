@@ -9,30 +9,10 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="experience.css">
   <link rel="stylesheet" href="spotlight.css">
-  <link rel="stylesheet" href="auth.css">
   <script src="app.js" defer></script>
-  <script src="auth.js" defer></script>
 </head>
 <body>
-  <section id="login-screen" class="login-screen" aria-labelledby="login-title">
-    <div class="login-card">
-      <div class="login-brand"><span class="brand-mark">✳</span><strong>Flowdesk</strong><span>演示工作台</span></div>
-      <img class="login-mascot" src="mascot.png" alt="工作台卡通助手">
-      <div class="login-kicker">先看效果，再讲方法</div>
-      <h1 id="login-title">欢迎进入 AI 办公现场</h1>
-      <p>用演示账号进入，亲手试一遍：杂乱消息怎样变成可交付成果。</p>
-      <form id="login-form" class="login-form">
-        <label for="demo-account">演示账号</label>
-        <input id="demo-account" name="username" autocomplete="username" required>
-        <label for="demo-password">密码</label>
-        <input id="demo-password" name="password" type="password" autocomplete="current-password" required>
-        <div id="login-error" class="login-error" role="alert" aria-live="polite"></div>
-        <button class="login-submit" type="submit">进入工作台 <span>→</span></button>
-      </form>
-      <small>全站使用虚构数据 · 仅供教学演示</small>
-    </div>
-  </section>
-  <div id="workbench" class="app-shell" hidden>
+  <div id="workbench" class="app-shell">
     <aside class="sidebar" aria-label="工作台导航">
       <div class="brand"><span class="brand-mark">✳</span><div><strong>Flowdesk</strong><small>AI 办公演示工作台</small></div></div>
       <div class="demo-flag">●&nbsp; 全站虚构演示数据</div>
@@ -48,7 +28,7 @@
       <div class="sidebar-bottom"><span class="avatar">示</span><div><strong>示例团队</strong><small>演示环境 · 无真实连接</small></div></div>
     </aside>
     <main class="main-area">
-      <header class="topbar"><span class="breadcrumb">工作空间 <span>/</span> <b id="breadcrumb">总览与演示</b></span><div class="top-actions"><span class="live-dot"></span> 演示模式 <span class="top-divider"></span><span id="clock"></span><button id="logout-button" class="logout-button" type="button">退出演示</button></div></header>
+      <header class="topbar"><span class="breadcrumb">工作空间 <span>/</span> <b id="breadcrumb">总览与演示</b></span><div class="top-actions"><span class="live-dot"></span> 演示模式 <span class="top-divider"></span><span id="clock"></span><form action="/logout" method="post"><button class="logout-button" type="submit">退出演示</button></form></div></header>
       <div id="content" class="content"></div>
     </main>
   </div>
